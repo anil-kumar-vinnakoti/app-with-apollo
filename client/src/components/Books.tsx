@@ -1,11 +1,12 @@
 import React, { Fragment } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
+import { title } from "process";
 
 interface Book {
   title: string;
   author: string;
 }
-const Books = () => {
+export default function Books() {
   const GET_BOOKS = gql`
     query GetBooks {
       books {
@@ -15,6 +16,19 @@ const Books = () => {
     }
   `;
 
+  const ADD_BOOK = gql`
+    mutation addBook($title: String!, $author: String!) {
+      addBook(title: $title, author: $author) {
+        title
+        author
+      }
+    }
+  `;
+
+  const [addBook] = useMutation(ADD_BOOK, {
+    variables: { title: "Na sav nen sastha neekendhuku", author: "Koushik" },
+    refetchQueries: [{ query: GET_BOOKS }],
+  });
   const { data, loading, error } = useQuery(GET_BOOKS);
 
   if (loading) {
@@ -26,7 +40,7 @@ const Books = () => {
   }
 
   return (
-    <Fragment>
+    <div className="flex flex-col items-center">
       <table className="table-fixed border-collapse border border-slate-500 ...">
         <thead>
           <tr>
@@ -45,8 +59,15 @@ const Books = () => {
           ))}
         </tbody>
       </table>
-    </Fragment>
+      <div className="mt-3">
+        <button
+          type="button"
+          className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          onClick={() => addBook()}
+        >
+          Add Book
+        </button>
+      </div>
+    </div>
   );
-};
-
-export default Books;
+}

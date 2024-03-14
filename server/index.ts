@@ -6,10 +6,6 @@ const books = [
     title: "The Awakening",
     author: "Kate Chopin",
   },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
 ];
 
 // A schema is a collection of type definitions (hence "typeDefs")
@@ -30,18 +26,28 @@ const typeDefs = `#graphql
   type Query {
     books: [Book]
   }
+
+  type Mutation {
+    addBook(title: String!, author: String!): [Book]
+  }
 `;
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
+  resolvers: {
+    Query: {
+      books: () => books,
+    },
+    Mutation: {
+      addBook: (parent, args) => {
+        const { title, author } = args;
+        books.push({ title, author });
+        return books;
+      },
+    },
+  },
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
