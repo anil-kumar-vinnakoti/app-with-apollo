@@ -1,7 +1,14 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import books from "./src/data/booksData.json" assert { type: "json" };
-import authors from "./src/data/authorsData.json" assert { type: "json" };
+import { expressMiddleware } from "@apollo/server/express4";
+// import books from "./src/data/booksData.json" assert { type: "json" };
+// import authors from "./src/data/authorsData.json" assert { type: "json" };
+import cors from "cors";
+import express from "express";
+import http from "http";
+import { prismaClient } from "./src/clients/db.js";
+
+const app = express();
+const httpServer = http.createServer(app);
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -9,30 +16,31 @@ import authors from "./src/data/authorsData.json" assert { type: "json" };
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    id:Int!
-    title: String!
-    author: Author!
-  }
-
   type Author{
     id:Int!
     name: String!
     books:[Book!]!
+  }
+  type Book{
+    id: Int!
+    title: String!
+    authorId: Int!
+    author: Author
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book],
     authors: [Author]
+    books:[Book]
   }
 
   type Mutation {
-    addBook(title: String!, author: String!): [Book]
+    addAuthor(name: String!): Author
+    addBook(title: String!, authorId:Int!): Book
   }
+  
 `;
 
 // The ApolloServer constructor requires two parameters: your schema
@@ -40,33 +48,63 @@ const typeDefs = `#graphql
 const server = new ApolloServer({
   typeDefs,
   resolvers: {
-    Book: {
-      author: (parent) =>
-        authors.find((author) => author.name === parent.author),
-    },
     Author: {
-      books: (parent) => books.filter((book) => book.author === parent.name),
+      books: async (parent) => {
+        const books = await prismaClient.book.findMany();
+        return books.filter((book) => book.authorId === parent.id);
+      },
+    },
+    Book: {
+      author: async (parent) => {
+        const authors = await prismaClient.author.findMany();
+        return authors.find((author) => author.id === parent.authorId);
+      },
     },
     Query: {
-      books: () => books,
-      authors: () => authors,
+      authors: async () => await prismaClient.author.findMany(),
+      books: async () => (await prismaClient.book.findMany()) || [],
     },
     Mutation: {
-      addBook: (parent, args) => {
-        const { title, author } = args;
-        books.push({ id: books.length + 1, title, author });
-        return books;
+      addAuthor: async (parent, args) => {
+        try {
+          const newAuthor = prismaClient.author.create({
+            data: { name: args.name },
+          });
+          return newAuthor;
+        } catch (error) {}
+      },
+      addBook: async (parent, args) => {
+        try {
+          const newBook = await prismaClient.book.create({
+            data: {
+              title: args.title,
+              authorId: args.authorId,
+            },
+          });
+          return newBook;
+        } catch (error) {
+          console.log(error);
+        }
       },
     },
   },
 });
 
-// Passing an ApolloServer instance to the `startStandaloneServer` function:
-//  1. creates an Express app
-//  2. installs your ApolloServer instance as middleware
-//  3. prepares your app to handle incoming requests
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+await server.start();
 
-console.log(`🚀  Server ready at: ${url}`);
+app.use(
+  "/graphql",
+  cors<cors.CorsRequest>({
+    origin: [
+      "http://localhost:3000",
+      // "https://studio.apollographql.com",
+    ],
+  }),
+  express.json(),
+  expressMiddleware(server)
+);
+
+await new Promise<void>((resolve) =>
+  httpServer.listen({ port: 4000 }, resolve)
+);
+console.log(`🚀 Server ready at http://localhost:4000/graphql`);

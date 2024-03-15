@@ -4,7 +4,12 @@ import { useQuery, gql } from "@apollo/client";
 interface Author {
   id: number;
   name: string;
-  books: object[];
+  books: Book[];
+}
+interface Book {
+  id: number;
+  title: string;
+  author: Author;
 }
 export default function Authors() {
   const GET_AUTHORS = gql`
@@ -35,9 +40,11 @@ export default function Authors() {
         <thead>
           <tr>
             <th className="border border-slate-600 bg-gray-200 p-2">
-              Author Id
+              Author Name
             </th>
-            <th className="border border-slate-600 bg-gray-200 p-2">Author</th>
+            <th className="border border-slate-600 bg-gray-200 p-2">
+              Book Title
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -45,9 +52,11 @@ export default function Authors() {
             <Fragment key={author.id}>
               <tr>
                 <td className="border border-slate-700 text-center">
-                  {author.id}
+                  {author.name}
                 </td>
-                <td className="border border-slate-700 p-4">{author.name}</td>
+                <td className="border border-slate-700 p-4">
+                  {author.books[0].title}
+                </td>
               </tr>
             </Fragment>
           ))}

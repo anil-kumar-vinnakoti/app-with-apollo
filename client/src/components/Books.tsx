@@ -2,12 +2,15 @@ import { Fragment } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
 
 interface Book {
+  id: number;
   title: string;
+  authorId: number;
   author: Author;
 }
 interface Author {
   id: number;
   name: string;
+  books: Book[];
 }
 export default function Books() {
   const GET_BOOKS = gql`
@@ -15,7 +18,9 @@ export default function Books() {
       books {
         id
         title
+        authorId
         author {
+          id
           name
         }
       }
@@ -23,10 +28,10 @@ export default function Books() {
   `;
 
   const ADD_BOOK = gql`
-    mutation addBook($title: String!, $author: String!) {
-      addBook(title: $title, author: $author) {
+    mutation addBook($title: String!, $authorId: Int!) {
+      addBook(title: $title, authorId: $authorId) {
         title
-        author
+        authorId
       }
     }
   `;
@@ -50,13 +55,17 @@ export default function Books() {
       <table className="table-fixed border-collapse border border-slate-500 ...">
         <thead>
           <tr>
-            <th className="border border-slate-600 bg-gray-200 p-2">Title</th>
-            <th className="border border-slate-600 bg-gray-200 p-2">Author</th>
+            <th className="border border-slate-600 bg-gray-200 p-2">
+              Book Title
+            </th>
+            <th className="border border-slate-600 bg-gray-200 p-2">
+              Author Name
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.books.map((book: Book) => (
-            <Fragment key={book.title}>
+            <Fragment key={book.id}>
               <tr>
                 <td className="border border-slate-700 p-4">{book.title}</td>
                 <td className="border border-slate-700 p-4">
