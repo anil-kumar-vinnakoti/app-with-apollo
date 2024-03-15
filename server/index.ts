@@ -1,12 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-];
+import books from "./src/data/booksData.json" assert { type: "json" };
+import authors from "./src/data/authorsData.json" assert { type: "json" };
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -16,15 +11,23 @@ const typeDefs = `#graphql
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
+    id:Int!
     title: String!
-    author: String!
+    author: Author!
+  }
+
+  type Author{
+    id:Int!
+    name: String!
+    books:[Book!]!
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book]
+    books: [Book],
+    authors: [Author]
   }
 
   type Mutation {
@@ -37,13 +40,21 @@ const typeDefs = `#graphql
 const server = new ApolloServer({
   typeDefs,
   resolvers: {
+    Book: {
+      author: (parent) =>
+        authors.find((author) => author.name === parent.author),
+    },
+    Author: {
+      books: (parent) => books.filter((book) => book.author === parent.name),
+    },
     Query: {
       books: () => books,
+      authors: () => authors,
     },
     Mutation: {
       addBook: (parent, args) => {
         const { title, author } = args;
-        books.push({ title, author });
+        books.push({ id: books.length + 1, title, author });
         return books;
       },
     },

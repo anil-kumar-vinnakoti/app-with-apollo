@@ -1,17 +1,23 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { title } from "process";
 
 interface Book {
   title: string;
-  author: string;
+  author: Author;
+}
+interface Author {
+  id: number;
+  name: string;
 }
 export default function Books() {
   const GET_BOOKS = gql`
-    query GetBooks {
+    query Query {
       books {
+        id
         title
-        author
+        author {
+          name
+        }
       }
     }
   `;
@@ -53,7 +59,9 @@ export default function Books() {
             <Fragment key={book.title}>
               <tr>
                 <td className="border border-slate-700 p-4">{book.title}</td>
-                <td className="border border-slate-700 p-4">{book.author}</td>
+                <td className="border border-slate-700 p-4">
+                  {book.author.name}
+                </td>
               </tr>
             </Fragment>
           ))}
