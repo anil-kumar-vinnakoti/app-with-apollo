@@ -3,18 +3,30 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./utils/apollo/client";
-
+import { Auth0Provider } from "@auth0/auth0-react";
+import AuthContextProvider from "./utils/auth/AuthContextProvider";
+import { ApolloClientProvider } from "./utils/apollo";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <Auth0Provider
+      domain="dev-lokpkdwjbb1xoaby.us.auth0.com"
+      clientId="NS58yWlGCNmtNoZYng4x1gET4VJUY76h"
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: "apollo-app-unique-identifier",
+        scope: "openid profile email",
+      }}
+    >
+      <AuthContextProvider>
+        <ApolloClientProvider>
+          <App />
+        </ApolloClientProvider>
+      </AuthContextProvider>
+    </Auth0Provider>
   </React.StrictMode>
 );
 

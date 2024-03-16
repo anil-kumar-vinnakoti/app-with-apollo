@@ -1,18 +1,24 @@
 import "./App.css";
-import Authors from "./components/Authors";
-import Books from "./components/Books";
-import AddBook from "./components/AddBook";
+import Home from "./pages/Home";
+import { useAuth0 } from "@auth0/auth0-react";
+import Login from "./pages/Login";
+import { useEffect } from "react";
 
 function App() {
+  const {
+    loginWithPopup,
+    loginWithRedirect,
+    user,
+    logout,
+    isAuthenticated,
+    getAccessTokenSilently,
+  } = useAuth0();
+
+  useEffect(() => {}, []);
+
   return (
     <div className="flex flex-col items-center mt-12">
-      <div className="flex flex-row gap-4">
-        <Books />
-        <Authors />
-      </div>
-      <div className="">
-        <AddBook />
-      </div>
+      {isAuthenticated ? <Home /> : <Login />}
     </div>
   );
 }

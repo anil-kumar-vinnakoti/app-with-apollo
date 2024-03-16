@@ -1,14 +1,26 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
-// import books from "./src/data/booksData.json" assert { type: "json" };
-// import authors from "./src/data/authorsData.json" assert { type: "json" };
 import cors from "cors";
 import express from "express";
 import http from "http";
 import { prismaClient } from "./src/clients/db.js";
+import { auth } from "express-oauth2-jwt-bearer";
+
+const jwtCheck = auth({
+  audience: "apollo-app-unique-identifier",
+  issuerBaseURL: "https://dev-lokpkdwjbb1xoaby.us.auth0.com/",
+  tokenSigningAlg: "RS256",
+});
 
 const app = express();
 const httpServer = http.createServer(app);
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    // "https://studio.apollographql.com",
+  ],
+  allowedHeaders: ["Authorization", "Content-Type"],
+};
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -92,14 +104,13 @@ const server = new ApolloServer({
 
 await server.start();
 
+// [TODO] Fix 401 for GraphQL studio
+// enforce on all endpoints
+app.use(cors(corsOptions), jwtCheck);
+
 app.use(
   "/graphql",
-  cors<cors.CorsRequest>({
-    origin: [
-      "http://localhost:3000",
-      // "https://studio.apollographql.com",
-    ],
-  }),
+  cors<cors.CorsRequest>(corsOptions),
   express.json(),
   expressMiddleware(server)
 );
