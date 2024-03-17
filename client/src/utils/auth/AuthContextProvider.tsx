@@ -12,14 +12,6 @@ function AuthContextProvider({ children }: Props) {
   const auth0 = useAuth0();
   const { getAccessTokenSilently } = auth0;
 
-  //   useEffect(() => {
-  //     // Add a convenient way to force a React refresh in local and dev for debugging
-  //     if (isLocal || isDev) {
-  //       // @ts-ignore
-  //       window.incrementCounter = () => setCounter((c) => c + 1);
-  //     }
-  //   }, []);
-
   const getAuthHeader = useCallback(async () => {
     const token = await getAccessTokenSilently({
       authorizationParams: {

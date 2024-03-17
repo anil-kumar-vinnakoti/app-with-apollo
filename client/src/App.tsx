@@ -5,16 +5,11 @@ import Login from "./pages/Login";
 import { useEffect } from "react";
 
 function App() {
-  const {
-    loginWithPopup,
-    loginWithRedirect,
-    user,
-    logout,
-    isAuthenticated,
-    getAccessTokenSilently,
-  } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   console.log("Hi");
+  // }, []);
 
   return (
     <div className="flex flex-col items-center mt-12">

@@ -3,7 +3,6 @@ import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 
 interface ApolloContextType {
   atlasClient: ApolloClient<NormalizedCacheObject>;
-  papiClient: ApolloClient<NormalizedCacheObject>;
   resetCache: () => Promise<any>;
   resetStore: () => Promise<any>;
 }
