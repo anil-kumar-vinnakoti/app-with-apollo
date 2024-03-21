@@ -20,6 +20,7 @@ root.render(
         audience: "apollo-app-unique-identifier",
         scope: "openid profile email",
       }}
+      // useRefreshTokens={true}
     >
       <AuthContextProvider>
         <ApolloClientProvider>

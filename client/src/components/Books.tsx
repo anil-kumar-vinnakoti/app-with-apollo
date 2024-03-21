@@ -1,46 +1,10 @@
 import { Fragment } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useAddBookMutation, useGetBooksQuery } from "../gql/types";
+import GET_BOOKS from "../graphql/GetBooks.gql";
 
-interface Book {
-  id: number;
-  title: string;
-  authorId: number;
-  author: Author;
-}
-interface Author {
-  id: number;
-  name: string;
-  books: Book[];
-}
 export default function Books() {
-  const GET_BOOKS = gql`
-    query Query {
-      books {
-        id
-        title
-        authorId
-        author {
-          id
-          name
-        }
-      }
-    }
-  `;
-
-  const ADD_BOOK = gql`
-    mutation addBook($title: String!, $authorId: Int!) {
-      addBook(title: $title, authorId: $authorId) {
-        title
-        authorId
-      }
-    }
-  `;
-
-  const [addBook] = useMutation(ADD_BOOK, {
-    variables: { title: "Na sav nen sastha neekendhuku", author: "Koushik" },
-    refetchQueries: [{ query: GET_BOOKS }],
-  });
-  const { data, loading, error } = useQuery(GET_BOOKS);
+  const [addBook] = useAddBookMutation();
+  const { data, loading, error } = useGetBooksQuery();
 
   if (loading) {
     return <h1>Loading....</h1>;
@@ -64,12 +28,12 @@ export default function Books() {
           </tr>
         </thead>
         <tbody>
-          {data.books.map((book: Book) => (
-            <Fragment key={book.id}>
+          {data?.books?.map((book) => (
+            <Fragment key={book?.id}>
               <tr>
-                <td className="border border-slate-700 p-4">{book.title}</td>
+                <td className="border border-slate-700 p-4">{book?.title}</td>
                 <td className="border border-slate-700 p-4">
-                  {book.author.name}
+                  {book?.author?.name}
                 </td>
               </tr>
             </Fragment>
@@ -80,7 +44,15 @@ export default function Books() {
         <button
           type="button"
           className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          onClick={() => addBook()}
+          onClick={() =>
+            addBook({
+              variables: {
+                title: "Na sav nen sastha neekendhuku",
+                authorId: 1,
+              },
+              refetchQueries: [{ query: GET_BOOKS }],
+            })
+          }
         >
           Add Book
         </button>

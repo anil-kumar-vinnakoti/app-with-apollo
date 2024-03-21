@@ -1,0 +1,9 @@
+query getAuthors {
+  authors {
+    id
+    name
+    books {
+      title
+    }
+  }
+}

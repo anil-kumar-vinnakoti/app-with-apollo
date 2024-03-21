@@ -106,7 +106,8 @@ await server.start();
 
 // [TODO] Fix 401 for GraphQL studio
 // enforce on all endpoints
-app.use(cors(corsOptions), jwtCheck);
+
+// app.use(cors(corsOptions), jwtCheck); [TODO] enabling this causing codegen Unauthorized issue for types in server. FIx it later. Hosting it somewhere will clears the problem
 
 app.use(
   "/graphql",

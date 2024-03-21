@@ -1,37 +1,15 @@
 import { Fragment } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useGetAuthorsQuery } from "../gql/types";
 
-interface Author {
-  id: number;
-  name: string;
-  books: Book[];
-}
-interface Book {
-  id: number;
-  title: string;
-  author: Author;
-}
 export default function Authors() {
-  const GET_AUTHORS = gql`
-    query getAuthors {
-      authors {
-        id
-        name
-        books {
-          title
-        }
-      }
-    }
-  `;
+  const { data, loading, error } = useGetAuthorsQuery();
 
-  const { data, loading, error } = useQuery(GET_AUTHORS);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-  if (loading) {
-    return <h1>Loading....</h1>;
-  }
-  if (error) {
-    console.log(error);
-    return null;
+  // Type guard to check if data is defined
+  if (!data?.authors?.length) {
+    return <p>No data available.</p>;
   }
 
   return (
@@ -48,14 +26,14 @@ export default function Authors() {
           </tr>
         </thead>
         <tbody>
-          {data.authors.map((author: Author) => (
-            <Fragment key={author.id}>
+          {data.authors.map((author) => (
+            <Fragment key={author?.id}>
               <tr>
                 <td className="border border-slate-700 text-center">
-                  {author.name}
+                  {author?.name}
                 </td>
                 <td className="border border-slate-700 p-4">
-                  {author.books[0].title}
+                  {author?.books[0].title}
                 </td>
               </tr>
             </Fragment>
