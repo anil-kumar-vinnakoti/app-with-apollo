@@ -1,4 +1,4 @@
-mutation addBook($title: String!, $authorId: Int!) {
+mutation AddBook($title: String!, $authorId: Int!) {
   addBook(title: $title, authorId: $authorId) {
     title
     authorId

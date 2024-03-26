@@ -1,4 +1,4 @@
-query getAuthors {
+query GetAuthors {
   authors {
     id
     name

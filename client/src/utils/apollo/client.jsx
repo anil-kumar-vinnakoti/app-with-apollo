@@ -30,9 +30,16 @@ export const getClient = ({
     return forward(operation);
   });
 
+  const formatDateLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map((response) => {
+      // here we can format response data
+      return response;
+    });
+  });
+
   const httpLink = new HttpLink({ uri: apiHostName });
 
-  let links = [authLink, httpLink];
+  let links = [authLink, formatDateLink, httpLink];
 
   const cache = new InMemoryCache({});
 
