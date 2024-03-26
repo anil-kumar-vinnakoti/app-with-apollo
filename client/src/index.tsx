@@ -15,12 +15,12 @@ root.render(
     <Auth0Provider
       domain="dev-lokpkdwjbb1xoaby.us.auth0.com"
       clientId="NS58yWlGCNmtNoZYng4x1gET4VJUY76h"
+      cacheLocation="localstorage"
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: "apollo-app-unique-identifier",
         scope: "openid profile email",
       }}
-      // useRefreshTokens={true}
     >
       <AuthContextProvider>
         <ApolloClientProvider>
