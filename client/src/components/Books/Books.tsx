@@ -37,17 +37,8 @@ export default function Books() {
   // console.log("loading", loading); [TODO] use this for loading grapihc
 
   return (
-    <div className="flex flex-col items-center">
-      {data?.books?.map((book: any) => (
-        <Fragment key={book?.id}>
-          <BookCard
-            book={book}
-            isLoading={loading}
-            handleEditOrAddBook={handleEditOrAddBook}
-          />
-        </Fragment>
-      ))}
-      <div className="mt-3">
+    <div>
+      <div className="mt-3 text-right">
         <Button
           className="rounded-full text-white bg-black px-4 py-2 text-xs"
           onClick={() =>
@@ -57,12 +48,26 @@ export default function Books() {
           Add Book
         </Button>
       </div>
-      <AddBook
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        editBookDetails={editBookDetails}
-        mode={editBookDetails?.id ? "EDIT" : "ADD"}
-      />
+      <div className="container mx-auto flex flex-wrap justify-center">
+        {data?.books?.map((book: any) => (
+          <Fragment key={book?.id}>
+            <div className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 mb-4 flex justify-center">
+              <BookCard
+                book={book}
+                isLoading={loading}
+                handleEditOrAddBook={handleEditOrAddBook}
+              />
+            </div>
+          </Fragment>
+        ))}
+
+        <AddBook
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          editBookDetails={editBookDetails}
+          mode={editBookDetails?.id ? "EDIT" : "ADD"}
+        />
+      </div>
     </div>
   );
 }

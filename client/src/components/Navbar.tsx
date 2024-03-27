@@ -4,7 +4,7 @@ import {
   UsergroupAddOutlined,
   BookOutlined,
 } from "@ant-design/icons";
-import UserLink from "./UserLink";
+import UserLink from "./UserDropdown";
 import { MenuProps } from "antd";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -47,9 +47,7 @@ const Navbar = () => {
   return (
     <Header className="bg-white shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
-        <div>
-          <span className="text-lg font-bold">Brand Logo</span>
-        </div>
+        <span className="text-lg font-bold">Brand Logo</span>
         <Menu
           theme="light"
           mode="horizontal"

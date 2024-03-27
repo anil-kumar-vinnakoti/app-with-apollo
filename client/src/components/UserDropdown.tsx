@@ -10,7 +10,7 @@ const items: MenuProps["items"] = [
   },
 ];
 
-const UserLink = () => (
+const UserDropdown = () => (
   <Dropdown menu={{ items }}>
     <a onClick={(e) => e.preventDefault()}>
       <Space>
@@ -20,4 +20,4 @@ const UserLink = () => (
   </Dropdown>
 );
 
-export default UserLink;
+export default UserDropdown;
