@@ -36,7 +36,9 @@ export type Mutation = {
   __typename?: 'Mutation';
   addAuthor?: Maybe<Author>;
   addBook?: Maybe<Book>;
+  deleteAuthor?: Maybe<Scalars['String']['output']>;
   deleteBook?: Maybe<Scalars['String']['output']>;
+  updateAuthor?: Maybe<Author>;
   updateBook?: Maybe<Book>;
 };
 
@@ -52,8 +54,20 @@ export type MutationAddBookArgs = {
 };
 
 
+export type MutationDeleteAuthorArgs = {
+  authorId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteBookArgs = {
   bookId: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateAuthorArgs = {
+  authorId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -102,6 +116,29 @@ export type UpdateBookMutationVariables = Exact<{
 
 
 export type UpdateBookMutation = { __typename?: 'Mutation', updateBook?: { __typename?: 'Book', title: string, authorId: number } | null };
+
+export type AddAuthorMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type AddAuthorMutation = { __typename?: 'Mutation', addAuthor?: { __typename?: 'Author', id: number, name: string } | null };
+
+export type DeleteAuthorMutationVariables = Exact<{
+  authorId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: string | null };
+
+export type UpdateAuthorMutationVariables = Exact<{
+  authorId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', id: number, name: string } | null };
 
 
 export const AddBookDocument = gql`
@@ -294,3 +331,104 @@ export function useUpdateBookMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateBookMutationHookResult = ReturnType<typeof useUpdateBookMutation>;
 export type UpdateBookMutationResult = Apollo.MutationResult<UpdateBookMutation>;
 export type UpdateBookMutationOptions = Apollo.BaseMutationOptions<UpdateBookMutation, UpdateBookMutationVariables>;
+export const AddAuthorDocument = gql`
+    mutation AddAuthor($name: String!) {
+  addAuthor(name: $name) {
+    id
+    name
+  }
+}
+    `;
+export type AddAuthorMutationFn = Apollo.MutationFunction<AddAuthorMutation, AddAuthorMutationVariables>;
+
+/**
+ * __useAddAuthorMutation__
+ *
+ * To run a mutation, you first call `useAddAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAuthorMutation, { data, loading, error }] = useAddAuthorMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useAddAuthorMutation(baseOptions?: Apollo.MutationHookOptions<AddAuthorMutation, AddAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAuthorMutation, AddAuthorMutationVariables>(AddAuthorDocument, options);
+      }
+export type AddAuthorMutationHookResult = ReturnType<typeof useAddAuthorMutation>;
+export type AddAuthorMutationResult = Apollo.MutationResult<AddAuthorMutation>;
+export type AddAuthorMutationOptions = Apollo.BaseMutationOptions<AddAuthorMutation, AddAuthorMutationVariables>;
+export const DeleteAuthorDocument = gql`
+    mutation DeleteAuthor($authorId: Int!, $name: String!) {
+  deleteAuthor(authorId: $authorId, name: $name)
+}
+    `;
+export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+
+/**
+ * __useDeleteAuthorMutation__
+ *
+ * To run a mutation, you first call `useDeleteAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAuthorMutation, { data, loading, error }] = useDeleteAuthorMutation({
+ *   variables: {
+ *      authorId: // value for 'authorId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAuthorMutation, DeleteAuthorMutationVariables>(DeleteAuthorDocument, options);
+      }
+export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
+export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
+export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+export const UpdateAuthorDocument = gql`
+    mutation UpdateAuthor($authorId: Int!, $name: String!) {
+  updateAuthor(authorId: $authorId, name: $name) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
+
+/**
+ * __useUpdateAuthorMutation__
+ *
+ * To run a mutation, you first call `useUpdateAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAuthorMutation, { data, loading, error }] = useUpdateAuthorMutation({
+ *   variables: {
+ *      authorId: // value for 'authorId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAuthorMutation, UpdateAuthorMutationVariables>(UpdateAuthorDocument, options);
+      }
+export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMutation>;
+export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
+export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;

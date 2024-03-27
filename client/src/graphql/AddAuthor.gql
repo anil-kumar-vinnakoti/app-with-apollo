@@ -1,0 +1,6 @@
+mutation AddAuthor($name: String!) {
+  addAuthor(name: $name) {
+    id
+    name
+  }
+}

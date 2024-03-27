@@ -1,0 +1,6 @@
+mutation UpdateAuthor($authorId: Int!, $name: String!) {
+  updateAuthor(authorId: $authorId, name: $name) {
+    id
+    name
+  }
+}

@@ -46,7 +46,8 @@ const BookCard = ({
 
   return (
     <Card
-      style={{ width: 300, marginTop: 16 }}
+      hoverable
+      style={{ width: 280, marginTop: 16 }}
       cover={
         <img
           alt="example"
@@ -66,10 +67,15 @@ const BookCard = ({
       ]}
     >
       <Skeleton loading={isLoading} active>
-        <Meta
-          title={book.title}
-          description={`Written by ${book.author?.name}`}
-        />
+        <div className="p-4">
+          <Meta
+            title={book.title}
+            // description={`Written by ${book.author?.name}`}
+          />
+          <p className="mt-2">
+            Writtern by <strong>{book.author?.name}</strong>
+          </p>
+        </div>
       </Skeleton>
     </Card>
   );

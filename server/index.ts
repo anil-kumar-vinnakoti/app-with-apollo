@@ -50,6 +50,8 @@ const typeDefs = `#graphql
 
   type Mutation {
     addAuthor(name: String!): Author
+    updateAuthor(authorId:Int!, name:String!): Author
+    deleteAuthor(authorId:Int!, name:String!): String
     addBook(title: String!, authorId:Int!): Book
     deleteBook(bookId: Int!): String
     updateBook( authorId: Int!, bookId: Int!,title:String!,): Book
@@ -86,6 +88,29 @@ const server = new ApolloServer({
           });
           return newAuthor;
         } catch (error) {}
+      },
+      updateAuthor: async (paren, { auhtorId, name }) => {
+        try {
+          const updatedAuthor = await prismaClient.author.update({
+            where: { id: auhtorId },
+            data: {
+              name,
+            },
+          });
+          return updatedAuthor;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      deleteAuthor: async (parent, { authorId }) => {
+        try {
+          await prismaClient.author.delete({
+            where: { id: authorId },
+          });
+          return "Author deleted successfully";
+        } catch (error) {
+          console.log(error);
+        }
       },
       addBook: async (parent, args) => {
         try {

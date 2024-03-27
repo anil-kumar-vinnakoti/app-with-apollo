@@ -4,11 +4,16 @@ import { Book, useGetBooksQuery } from "../../gql/types";
 import BookCard from "./BookCard";
 import { Button } from "antd";
 import AddBook from "./AddBook";
+import Spinner from "../utils/Spinner";
 
 export default function Books() {
   const { data, loading, error } = useGetBooksQuery();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editBookDetails, setEditBookDetails] = useState<Book | undefined>();
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   if (error) {
     console.log(error);
@@ -23,42 +28,40 @@ export default function Books() {
     editBookDetails?: Book;
   }) => {
     if (mode === "ADD") {
-      console.log(mode, editBookDetails);
       setIsModalOpen(true);
       setEditBookDetails(undefined);
     } else if (mode === "EDIT") {
-      console.log(mode, editBookDetails);
       setEditBookDetails(editBookDetails);
       setIsModalOpen(true);
     }
     return undefined;
   };
 
-  // console.log("loading", loading); [TODO] use this for loading grapihc
+  // console.log("loading", loading);
+  // [TODO] use this for loading grapihc
 
   return (
     <div>
-      <div className="mt-3 text-right">
-        <Button
-          className="rounded-full text-white bg-black px-4 py-2 text-xs"
-          onClick={() =>
-            handleEditOrAddBook({ mode: "ADD", editBookDetails: undefined })
-          }
-        >
-          Add Book
-        </Button>
-      </div>
+      <Button
+        className="rounded-full text-white bg-black px-5 py-2 text-xs leading-3 float-end w-full"
+        onClick={() =>
+          handleEditOrAddBook({ mode: "ADD", editBookDetails: undefined })
+        }
+      >
+        Add Book
+      </Button>
       <div className="container mx-auto flex flex-wrap justify-center">
         {data?.books?.map((book: any) => (
-          <Fragment key={book?.id}>
-            <div className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 mb-4 flex justify-center">
-              <BookCard
-                book={book}
-                isLoading={loading}
-                handleEditOrAddBook={handleEditOrAddBook}
-              />
-            </div>
-          </Fragment>
+          <div
+            key={book.id}
+            className="basis-1 sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 2xl:basis-1/5 mb-4 flex justify-center"
+          >
+            <BookCard
+              book={book}
+              isLoading={loading}
+              handleEditOrAddBook={handleEditOrAddBook}
+            />
+          </div>
         ))}
 
         <AddBook

@@ -19,7 +19,7 @@ const Navbar = () => {
   const menuItems: MenuProps["items"] = [
     {
       label: "Home",
-      key: "/",
+      key: "",
       icon: <HomeOutlined />,
     },
     {
@@ -31,10 +31,6 @@ const Navbar = () => {
       label: "Books",
       key: "/books",
       icon: <BookOutlined />,
-    },
-    {
-      key: "SubMenu",
-      icon: <UserLink />,
     },
   ];
 
@@ -48,15 +44,20 @@ const Navbar = () => {
     <Header className="bg-white shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
         <span className="text-lg font-bold">Brand Logo</span>
-        <Menu
-          theme="light"
-          mode="horizontal"
-          defaultSelectedKeys={["home"]}
-          className="border-none"
-          items={menuItems}
-          onClick={onClick}
-          selectedKeys={[current]}
-        />
+        <span className="flex">
+          <Menu
+            theme="light"
+            mode="horizontal"
+            defaultSelectedKeys={["home"]}
+            className="border-none"
+            items={menuItems}
+            onClick={onClick}
+            selectedKeys={[current]}
+          />
+          <span className="ml-4">
+            <UserLink />
+          </span>
+        </span>
       </div>
     </Header>
   );
