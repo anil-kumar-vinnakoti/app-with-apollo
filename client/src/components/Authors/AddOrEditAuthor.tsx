@@ -63,10 +63,9 @@ const AddOrEditAuthor = ({
     method({
       variables: {
         name: values.name,
-        authorId: values.authorId,
-        // bookId: editAuthorDetails?.id as number,
+        authorId: editAuthorDetails?.id!,
       },
-      refetchQueries: ["GetAuthors"],
+      refetchQueries: ["GetBooks", "GetAuthors"],
       onCompleted: handleCancel,
     });
   };

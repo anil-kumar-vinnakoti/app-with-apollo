@@ -1,3 +1,3 @@
-mutation DeleteAuthor($authorId: Int!, $name: String!) {
-  deleteAuthor(authorId: $authorId, name: $name)
+mutation DeleteAuthor($authorId: Int!) {
+  deleteAuthor(authorId: $authorId)
 }

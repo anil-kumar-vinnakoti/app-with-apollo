@@ -1,6 +1,5 @@
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Card, Skeleton, Dropdown, Button } from "antd";
-import { MenuProps } from "antd";
+import { Card, Skeleton, Dropdown, Button, MenuProps } from "antd";
 import { Book } from "../../gql/types";
 import { useDeleteBookMutation } from "../../gql/types";
 
@@ -22,7 +21,7 @@ const BookCard = ({
   }) => undefined;
 }) => {
   const [deleteBook] = useDeleteBookMutation();
-  const items: MenuProps["items"] = [
+  const dropdownItems: MenuProps["items"] = [
     {
       label: (
         <Button
@@ -33,7 +32,7 @@ const BookCard = ({
               variables: {
                 bookId: book.id,
               },
-              refetchQueries: ["GetBooks"],
+              refetchQueries: ["GetBooks", "GetAuthors"],
             })
           }
         >
@@ -61,7 +60,7 @@ const BookCard = ({
             handleEditOrAddBook({ mode: "EDIT", editBookDetails: book })
           }
         />,
-        <Dropdown menu={{ items }} trigger={["click"]}>
+        <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
           <EllipsisOutlined key="ellipsis" />
         </Dropdown>,
       ]}

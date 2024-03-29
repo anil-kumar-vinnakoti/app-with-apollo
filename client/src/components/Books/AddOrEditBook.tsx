@@ -64,9 +64,9 @@ const AddBook = ({
       variables: {
         title: values.title,
         authorId: values.authorId,
-        bookId: editBookDetails?.id as number,
+        bookId: editBookDetails?.id!,
       },
-      refetchQueries: ["GetBooks"],
+      refetchQueries: ["GetBooks", "GetAuthors"],
       onCompleted: handleCancel,
     });
   };

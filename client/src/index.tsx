@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
 import AuthContextProvider from "./utils/auth/AuthContextProvider";
 import { ApolloClientProvider } from "./utils/apollo";
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

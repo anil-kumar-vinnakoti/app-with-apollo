@@ -20,7 +20,7 @@ export default function Authors() {
     return <p>No data available.</p>;
   }
 
-  const handleEditOrAddBook = ({
+  const handleEditOrAddAuthor = ({
     mode,
     editAuthorDetails,
   }: {
@@ -42,7 +42,7 @@ export default function Authors() {
       <Button
         className="rounded-full text-white bg-black px-5 py-2 text-xs leading-3 float-end w-full hover:shadow-md"
         onClick={() =>
-          handleEditOrAddBook({ mode: "ADD", editAuthorDetails: undefined })
+          handleEditOrAddAuthor({ mode: "ADD", editAuthorDetails: undefined })
         }
       >
         Add Author
@@ -53,7 +53,11 @@ export default function Authors() {
             key={author.id}
             className="basis-1 sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 2xl:basis-1/5 mb-4 flex justify-center"
           >
-            <AuthorCard author={author} />
+            <AuthorCard
+              author={author as Author}
+              isLoading={loading}
+              handleEditOrAddAuthor={handleEditOrAddAuthor}
+            />
           </div>
         ))}
       </div>

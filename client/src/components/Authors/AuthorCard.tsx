@@ -1,16 +1,70 @@
-import React, { Fragment } from "react";
-import { Card, Dropdown, Skeleton } from "antd";
+import React from "react";
+import { Card, Skeleton, Tooltip, Dropdown, MenuProps, Button } from "antd";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Author } from "../../gql/types";
+import { Author, useDeleteAuthorMutation } from "../../gql/types";
 
-const gridStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "4%",
-  textAlign: "center",
-};
-
-const AuthorCard = ({ author }: { author: Author }) => {
+const AuthorCard = ({
+  author,
+  isLoading,
+  handleEditOrAddAuthor,
+}: {
+  author: Author;
+  isLoading: boolean;
+  handleEditOrAddAuthor: ({
+    mode,
+    editAuthorDetails,
+  }: {
+    mode: string;
+    editAuthorDetails: Author;
+  }) => undefined;
+}) => {
   const authorTopRatedBooks = author.books.slice(0, 3);
+  const [deleteAuthor, { error }] = useDeleteAuthorMutation();
+
+  console.log(error);
+
+  const gridStyle: React.CSSProperties = {
+    width: "100%",
+    padding: `${
+      authorTopRatedBooks.length === (0 || 1)
+        ? "20% 0"
+        : authorTopRatedBooks.length === 2
+        ? "8% 0"
+        : authorTopRatedBooks.length === 3
+        ? "4%"
+        : ""
+    }`,
+    textAlign: "center",
+  };
+
+  const dropdownItems: MenuProps["items"] = [
+    {
+      label: (
+        <Button type="link" className="text-black">
+          Edit
+        </Button>
+      ),
+      key: "edit",
+      onClick: () =>
+        handleEditOrAddAuthor({ mode: "EDIT", editAuthorDetails: author }),
+    },
+    {
+      label: (
+        <Button type="link" danger>
+          Delete
+        </Button>
+      ),
+      key: "delete",
+      onClick: () => {
+        deleteAuthor({
+          variables: {
+            authorId: author.id,
+          },
+          refetchQueries: ["GetBooks", "GetAuthors"],
+        });
+      },
+    },
+  ];
   return (
     <Card
       style={{ width: 260, marginTop: 16 }}
@@ -24,10 +78,12 @@ const AuthorCard = ({ author }: { author: Author }) => {
         />
       }
       actions={[
-        <EditOutlined key="edit" />,
-        //   <Dropdown menu={{ items }} trigger={["click"]}>
-        <EllipsisOutlined key="ellipsis" />,
-        //   </Dropdown>,
+        <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
+          <EditOutlined key="edit" />
+        </Dropdown>,
+        <Tooltip placement="top" title="More books">
+          <EllipsisOutlined key="ellipsis" />
+        </Tooltip>,
       ]}
     >
       <Skeleton loading={false} active>
@@ -45,7 +101,12 @@ const AuthorCard = ({ author }: { author: Author }) => {
           </Card.Grid>
         ))
       ) : (
-        <Card.Grid style={gridStyle}>No Books to show</Card.Grid>
+        <Card.Grid
+          hoverable={false}
+          style={{ textAlign: "center", width: "100%", padding: "20% 0" }}
+        >
+          No Books to show
+        </Card.Grid>
       )}
     </Card>
   );

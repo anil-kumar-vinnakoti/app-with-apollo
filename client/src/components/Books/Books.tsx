@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Fragment } from "react";
 import { Book, useGetBooksQuery } from "../../gql/types";
 import BookCard from "./BookCard";
 import { Button } from "antd";
-import AddBook from "./AddBook";
+import AddOrEditBook from "./AddOrEditBook";
 import Spinner from "../utils/Spinner";
 
 export default function Books() {
@@ -64,7 +63,7 @@ export default function Books() {
           </div>
         ))}
 
-        <AddBook
+        <AddOrEditBook
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           editBookDetails={editBookDetails}
