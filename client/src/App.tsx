@@ -1,25 +1,13 @@
-import "./App.css";
+import { Fragment } from "react";
+import { Layout } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
-import Login from "./pages/Login";
-
-// function App() {
-
-//   return (
-//     <div className="flex flex-col items-center mt-12">
-//       {isAuthenticated ? <Home /> : <Login />}
-//     </div>
-//   );
-// }
-
-import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Navbar from "./components/Navbar";
 import Books from "./components/Books/Books";
 import Authors from "./components/Authors/Authors";
-import { Layout } from "antd";
-// import Profile from "./pages/Profile";
-// import Settings from "./pages/Settings";
+import "./App.css";
 
 const App = () => {
   const { Content } = Layout;

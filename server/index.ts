@@ -111,7 +111,7 @@ const server = new ApolloServer({
             where: { authorId },
           });
 
-          // Delete the books associated with the author
+          //  First delete the books associated with the author
           if (books.length) {
             await prismaClient.book.deleteMany({
               where: { authorId },

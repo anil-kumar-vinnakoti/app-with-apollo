@@ -68,7 +68,7 @@ const AuthorCard = ({
   return (
     <Card
       style={{ width: 260, marginTop: 16 }}
-      className="ant-card-body"
+      className="padding-0"
       hoverable={true}
       cover={
         <img

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-.ant-card-body {
+body {
+  box-sizing: border-box;
+}
+
+a {
+  cursor: pointer;
+}
+
+.padding-0 {
   padding: 0 !important;
 }

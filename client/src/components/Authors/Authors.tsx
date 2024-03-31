@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Author, useGetAuthorsQuery } from "../../gql/types";
-import AuthorCard from "./AuthorCard";
 import { Button } from "antd";
+import AuthorCard from "./AuthorCard";
+import Spinner from "../utils/Spinner";
 import AddOrEditAuthor from "./AddOrEditAuthor";
+import { Author, useGetAuthorsQuery } from "../../gql/types";
 
 export default function Authors() {
   const { data, loading, error } = useGetAuthorsQuery();
@@ -12,7 +13,7 @@ export default function Authors() {
     Author | undefined
   >();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p>Error: {error.message}</p>;
 
   // Type guard to check if data is defined
