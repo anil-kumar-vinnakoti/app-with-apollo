@@ -28,8 +28,6 @@ const AuthorCard = ({
   const authorTopRatedBooks = author.books.slice(0, 3);
   const [deleteAuthor, { error }] = useDeleteAuthorMutation();
 
-  console.log(error);
-
   const gridStyle: React.CSSProperties = {
     width: "100%",
     padding: `${

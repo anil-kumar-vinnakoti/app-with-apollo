@@ -6,15 +6,16 @@ import {
 } from "@ant-design/icons";
 import UserLink from "./UserDropdown";
 import { MenuProps } from "antd";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 const { Header } = Layout;
 
 const Navbar = () => {
   const history = useHistory();
+  const location = useLocation();
 
-  const [current, setCurrent] = useState(history.location.pathname);
+  const [current, setCurrent] = useState("");
 
   const menuItems: MenuProps["items"] = [
     {
@@ -39,6 +40,10 @@ const Navbar = () => {
     history.push(key);
     setCurrent(key);
   };
+
+  useEffect(() => {
+    setCurrent(location.pathname);
+  }, [location.pathname]);
 
   return (
     <Header className="bg-white shadow-sm">
