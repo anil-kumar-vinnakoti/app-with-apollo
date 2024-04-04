@@ -66,14 +66,16 @@ const server = new ApolloServer({
   resolvers: {
     Author: {
       books: async (parent) => {
-        const books = await prismaClient.book.findMany();
-        return books.filter((book) => book.authorId === parent.id);
+        return await prismaClient.book.findMany({
+          where: { authorId: parent.id },
+        });
       },
     },
     Book: {
       author: async (parent) => {
-        const authors = await prismaClient.author.findMany();
-        return authors.find((author) => author.id === parent.authorId);
+        return await prismaClient.author.findFirst({
+          where: { id: parent.authorId },
+        });
       },
     },
     Query: {

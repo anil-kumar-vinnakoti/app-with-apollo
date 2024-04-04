@@ -1,7 +1,14 @@
 import React from "react";
 import { Card, Skeleton, Tooltip, Dropdown, MenuProps, Button } from "antd";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Author, useDeleteAuthorMutation } from "../../gql/types";
+import {
+  Author,
+  Book,
+  GetAuthorsDocument,
+  GetBooksDocument,
+  useDeleteAuthorMutation,
+} from "../../gql/types";
+import { ApolloCache } from "@apollo/client";
 
 const AuthorCard = ({
   author,
@@ -55,13 +62,38 @@ const AuthorCard = ({
         </Button>
       ),
       key: "delete",
-      onClick: () => {
-        deleteAuthor({
-          variables: {
-            authorId: author.id,
-          },
-          refetchQueries: ["GetBooks", "GetAuthors"],
-        });
+      onClick: async () => {
+        try {
+          await deleteAuthor({
+            variables: {
+              authorId: author.id,
+            },
+            update: (cache: ApolloCache<any>) => {
+              const { authors }: any = cache.readQuery({
+                query: GetAuthorsDocument,
+              });
+              cache.writeQuery({
+                query: GetAuthorsDocument,
+                data: {
+                  authors: authors.filter((a: Author) => a.id !== author.id),
+                },
+              });
+
+              // Manually remove books associated with the deleted author from the cache
+              const { books }: any = cache.readQuery({
+                query: GetBooksDocument,
+              });
+              cache.writeQuery({
+                query: GetBooksDocument,
+                data: {
+                  books: books.filter((b: Book) => b.author?.id !== author.id),
+                },
+              });
+            },
+          });
+        } catch (error) {
+          console.error("Error deleting author:", error);
+        }
       },
     },
   ];
@@ -95,8 +127,8 @@ const AuthorCard = ({
         />
       </Skeleton>
       {!!authorTopRatedBooks.length ? (
-        authorTopRatedBooks.map((book, index) => (
-          <Card.Grid key={index} style={gridStyle}>
+        authorTopRatedBooks.map((book: Book) => (
+          <Card.Grid key={book.title} style={gridStyle}>
             {book.title}
           </Card.Grid>
         ))
