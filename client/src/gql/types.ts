@@ -104,13 +104,6 @@ export type DeleteAuthorMutationVariables = Exact<{
 
 export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: string | null };
 
-export type DeleteBookMutationVariables = Exact<{
-  bookId: Scalars['Int']['input'];
-}>;
-
-
-export type DeleteBookMutation = { __typename?: 'Mutation', deleteBook?: string | null };
-
 export type GetAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -137,6 +130,13 @@ export type UpdateBookMutationVariables = Exact<{
 
 
 export type UpdateBookMutation = { __typename?: 'Mutation', updateBook?: { __typename?: 'Book', title: string, authorId: number } | null };
+
+export type DeleteBookMutationVariables = Exact<{
+  bookId: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteBookMutation = { __typename?: 'Mutation', deleteBook?: string | null };
 
 
 export const AddAuthorDocument = gql`
@@ -239,37 +239,6 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
-export const DeleteBookDocument = gql`
-    mutation DeleteBook($bookId: Int!) {
-  deleteBook(bookId: $bookId)
-}
-    `;
-export type DeleteBookMutationFn = Apollo.MutationFunction<DeleteBookMutation, DeleteBookMutationVariables>;
-
-/**
- * __useDeleteBookMutation__
- *
- * To run a mutation, you first call `useDeleteBookMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteBookMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteBookMutation, { data, loading, error }] = useDeleteBookMutation({
- *   variables: {
- *      bookId: // value for 'bookId'
- *   },
- * });
- */
-export function useDeleteBookMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBookMutation, DeleteBookMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteBookMutation, DeleteBookMutationVariables>(DeleteBookDocument, options);
-      }
-export type DeleteBookMutationHookResult = ReturnType<typeof useDeleteBookMutation>;
-export type DeleteBookMutationResult = Apollo.MutationResult<DeleteBookMutation>;
-export type DeleteBookMutationOptions = Apollo.BaseMutationOptions<DeleteBookMutation, DeleteBookMutationVariables>;
 export const GetAuthorsDocument = gql`
     query GetAuthors {
   authors {
@@ -429,3 +398,34 @@ export function useUpdateBookMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateBookMutationHookResult = ReturnType<typeof useUpdateBookMutation>;
 export type UpdateBookMutationResult = Apollo.MutationResult<UpdateBookMutation>;
 export type UpdateBookMutationOptions = Apollo.BaseMutationOptions<UpdateBookMutation, UpdateBookMutationVariables>;
+export const DeleteBookDocument = gql`
+    mutation DeleteBook($bookId: Int!) {
+  deleteBook(bookId: $bookId)
+}
+    `;
+export type DeleteBookMutationFn = Apollo.MutationFunction<DeleteBookMutation, DeleteBookMutationVariables>;
+
+/**
+ * __useDeleteBookMutation__
+ *
+ * To run a mutation, you first call `useDeleteBookMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBookMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBookMutation, { data, loading, error }] = useDeleteBookMutation({
+ *   variables: {
+ *      bookId: // value for 'bookId'
+ *   },
+ * });
+ */
+export function useDeleteBookMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBookMutation, DeleteBookMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBookMutation, DeleteBookMutationVariables>(DeleteBookDocument, options);
+      }
+export type DeleteBookMutationHookResult = ReturnType<typeof useDeleteBookMutation>;
+export type DeleteBookMutationResult = Apollo.MutationResult<DeleteBookMutation>;
+export type DeleteBookMutationOptions = Apollo.BaseMutationOptions<DeleteBookMutation, DeleteBookMutationVariables>;

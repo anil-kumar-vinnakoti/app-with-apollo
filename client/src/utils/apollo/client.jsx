@@ -9,6 +9,7 @@ import {
 import { useAuthContext } from "../auth/AuthContext";
 import ApolloContext from "./ApolloContext";
 import { useMemo } from "react";
+import { onError } from "@apollo/client/link/error";
 
 export const getClient = ({
   apiHostName,
@@ -37,9 +38,19 @@ export const getClient = ({
     });
   });
 
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
   const httpLink = new HttpLink({ uri: apiHostName });
 
-  let links = [authLink, formatDateLink, httpLink];
+  let links = [authLink, errorLink, formatDateLink, httpLink];
 
   const cache = new InMemoryCache({});
 

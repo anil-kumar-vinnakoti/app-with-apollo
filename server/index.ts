@@ -15,10 +15,7 @@ const jwtCheck = auth({
 const app = express();
 const httpServer = http.createServer(app);
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    // "https://studio.apollographql.com",
-  ],
+  origin: ["http://localhost:3000"],
   allowedHeaders: ["Authorization", "Content-Type"],
 };
 
@@ -59,8 +56,7 @@ const typeDefs = `#graphql
   
 `;
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
+// The ApolloServer constructor requires two parameters: your schema definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
   resolvers: {
