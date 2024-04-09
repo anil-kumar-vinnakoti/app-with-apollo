@@ -29,7 +29,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "codegen": "graphql-codegen --config codegen.yml",
-    "dev": "concurrently \"yarn start\" \"yarn codegen\""
+    "dev": "concurrently 'yarn start' 'yarn codegen'"
   },
   "eslintConfig": {
     "extends": [

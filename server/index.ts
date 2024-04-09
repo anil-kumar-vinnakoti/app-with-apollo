@@ -13,6 +13,10 @@ const jwtCheck = auth({
 });
 
 const app = express();
+
+app.get("/", (_req, res) => res.sendStatus(200));
+app.use(express.json({ limit: "10mb" }));
+
 const httpServer = http.createServer(app);
 const corsOptions = {
   origin: ["http://localhost:3000"],
@@ -58,6 +62,9 @@ const typeDefs = `#graphql
 
 // The ApolloServer constructor requires two parameters: your schema definition and your set of resolvers.
 const server = new ApolloServer({
+  // use allowBatchedHttpRequests it when multiple httpRequests are needed to bed optimized on a single request
+  // allowBatchedHttpRequests: true,
+
   typeDefs,
   resolvers: {
     Author: {
@@ -75,7 +82,9 @@ const server = new ApolloServer({
       },
     },
     Query: {
-      authors: async () => await prismaClient.author.findMany(),
+      authors: async () => {
+        return (await prismaClient.author.findMany()) || [];
+      },
       books: async () => (await prismaClient.book.findMany()) || [],
     },
     Mutation: {

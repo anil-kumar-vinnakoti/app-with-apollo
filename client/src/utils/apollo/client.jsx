@@ -10,6 +10,7 @@ import { useAuthContext } from "../auth/AuthContext";
 import ApolloContext from "./ApolloContext";
 import { useMemo } from "react";
 import { onError } from "@apollo/client/link/error";
+import { BatchHttpLink } from "@apollo/client/link/batch-http";
 
 export const getClient = ({
   apiHostName,
@@ -49,6 +50,13 @@ export const getClient = ({
   });
 
   const httpLink = new HttpLink({ uri: apiHostName });
+
+  // use allowBatchedHttpRequests it when multiple httpRequests are needed to bed optimized on a single request
+  // const httpLink = new BatchHttpLink({
+  //   uri: apiHostName,
+  //   // batchMax: 5, // No more than 5 operations per batch
+  //   batchInterval: 0, // Wait no more than 20ms after first batched operation
+  // });
 
   let links = [authLink, errorLink, formatDateLink, httpLink];
 
