@@ -9,7 +9,7 @@ import { auth } from "express-oauth2-jwt-bearer";
 const jwtCheck = auth({
   audience: "apollo-app-unique-identifier",
   issuerBaseURL: "https://dev-lokpkdwjbb1xoaby.us.auth0.com/",
-  tokenSigningAlg: "RS256",
+  tokenSigningAlg: "RS256"
 });
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(express.json({ limit: "10mb" }));
 const httpServer = http.createServer(app);
 const corsOptions = {
   origin: ["http://localhost:3000"],
-  allowedHeaders: ["Authorization", "Content-Type"],
+  allowedHeaders: ["Authorization", "Content-Type"]
 };
 
 // A schema is a collection of type definitions (hence "typeDefs")
@@ -70,28 +70,28 @@ const server = new ApolloServer({
     Author: {
       books: async (parent) => {
         return await prismaClient.book.findMany({
-          where: { authorId: parent.id },
+          where: { authorId: parent.id }
         });
-      },
+      }
     },
     Book: {
       author: async (parent) => {
         return await prismaClient.author.findFirst({
-          where: { id: parent.authorId },
+          where: { id: parent.authorId }
         });
-      },
+      }
     },
     Query: {
       authors: async () => {
         return (await prismaClient.author.findMany()) || [];
       },
-      books: async () => (await prismaClient.book.findMany()) || [],
+      books: async () => (await prismaClient.book.findMany()) || []
     },
     Mutation: {
       addAuthor: async (parent, args) => {
         try {
           const newAuthor = prismaClient.author.create({
-            data: { name: args.name },
+            data: { name: args.name }
           });
           return newAuthor;
         } catch (error) {}
@@ -103,8 +103,8 @@ const server = new ApolloServer({
           const updatedAuthor = await prismaClient.author.update({
             where: { id: authorId },
             data: {
-              name,
-            },
+              name
+            }
           });
           return updatedAuthor;
         } catch (error) {
@@ -115,19 +115,19 @@ const server = new ApolloServer({
         try {
           // // Get the author's books
           const books = await prismaClient.book.findMany({
-            where: { authorId },
+            where: { authorId }
           });
 
           //  First delete the books associated with the author
           if (books.length) {
             await prismaClient.book.deleteMany({
-              where: { authorId },
+              where: { authorId }
             });
           }
 
           // Now delete the author
           await prismaClient.author.delete({
-            where: { id: authorId },
+            where: { id: authorId }
           });
 
           return "Author deleted successfully";
@@ -140,8 +140,8 @@ const server = new ApolloServer({
           const newBook = await prismaClient.book.create({
             data: {
               title: args.title,
-              authorId: args.authorId,
-            },
+              authorId: args.authorId
+            }
           });
           return newBook;
         } catch (error) {
@@ -151,7 +151,7 @@ const server = new ApolloServer({
       deleteBook: async (parent, { bookId }) => {
         try {
           await prismaClient.book.delete({
-            where: { id: bookId },
+            where: { id: bookId }
           });
           return "Book deleted successfully";
         } catch (error) {
@@ -164,17 +164,17 @@ const server = new ApolloServer({
             where: { id: bookId },
             data: {
               title,
-              authorId,
-            },
+              authorId
+            }
           });
 
           return updatedBook;
         } catch (error) {
           console.error("Error updating book:", error);
         }
-      },
-    },
-  },
+      }
+    }
+  }
 });
 
 await server.start();
